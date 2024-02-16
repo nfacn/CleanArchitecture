@@ -3,7 +3,6 @@ using CleanArchitecture.Infrastructure.Data;
 using CleanArchitecture.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Application.FunctionalTests;
@@ -101,6 +100,7 @@ public partial class Testing
         }
         catch (Exception) 
         {
+            // 
         }
 
         _userId = null;

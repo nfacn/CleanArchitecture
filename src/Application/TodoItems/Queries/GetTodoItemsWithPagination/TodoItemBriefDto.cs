@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Domain.Entities;
+using Riok.Mapperly.Abstractions;
 
 namespace CleanArchitecture.Application.TodoItems.Queries.GetTodoItemsWithPagination;
 
@@ -12,11 +13,10 @@ public class TodoItemBriefDto
 
     public bool Done { get; init; }
 
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<TodoItem, TodoItemBriefDto>();
-        }
-    }
+}
+
+[Mapper]
+public static partial class TodoItemBriefDtoMapper
+{
+    public static partial TodoItemBriefDto ToDto(this TodoItem todoItem);
 }

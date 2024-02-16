@@ -2,12 +2,15 @@
 
 using static Testing;
 
-[TestFixture]
-public abstract class BaseTestFixture
+public abstract class BaseTestFixture : IDisposable
 {
-    [SetUp]
-    public async Task TestSetUp()
+    protected BaseTestFixture()
     {
-        await ResetState();
+        ResetState().Wait();
+    }
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
     }
 }
