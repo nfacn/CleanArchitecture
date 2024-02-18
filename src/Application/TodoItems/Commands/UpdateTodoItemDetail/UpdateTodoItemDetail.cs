@@ -26,10 +26,11 @@ public class UpdateTodoItemDetailCommandHandler : IRequestHandler<UpdateTodoItem
     public async Task Handle(UpdateTodoItemDetailCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.TodoItems
-            .FindAsync(new object[] { request.Id }, cancellationToken);
+            .FindAsync([request.Id], cancellationToken);
 
-        Guard.Against.NotFound(request.Id, entity);
-
+        // TODO: Check for not found
+        if (entity == null)
+            return;
         entity.ListId = request.ListId;
         entity.Priority = request.Priority;
         entity.Note = request.Note;

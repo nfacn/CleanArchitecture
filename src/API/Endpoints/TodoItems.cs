@@ -4,8 +4,9 @@ using CleanArchitecture.Application.TodoItems.Commands.DeleteTodoItem;
 using CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItem;
 using CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItemDetail;
 using CleanArchitecture.Application.TodoItems.Queries.GetTodoItemsWithPagination;
+using CleanArchitecture.API.Infrastructure;
 
-namespace CleanArchitecture.Web.Endpoints;
+namespace CleanArchitecture.API.Endpoints;
 
 public class TodoItems : EndpointGroupBase
 {

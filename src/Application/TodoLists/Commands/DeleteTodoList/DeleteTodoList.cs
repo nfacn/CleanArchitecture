@@ -19,7 +19,9 @@ public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListComman
             .Where(l => l.Id == request.Id)
             .SingleOrDefaultAsync(cancellationToken);
 
-        Guard.Against.NotFound(request.Id, entity);
+        // TODO: Handle properly 
+        if (entity == null)
+            return;
 
         _context.TodoLists.Remove(entity);
 

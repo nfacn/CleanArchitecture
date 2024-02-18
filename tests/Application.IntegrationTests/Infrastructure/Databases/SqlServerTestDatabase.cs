@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Respawn;
 
-namespace CleanArchitecture.Application.FunctionalTests;
+namespace CleanArchitecture.Application.IntegrationTests.Infrastructure.Databases;
 
 public class SqlServerTestDatabase : ITestDatabase
 {
-    private readonly string _connectionString = null!;
-    private SqlConnection _connection = null!;
-    private Respawner _respawner = null!;
+    private readonly string _connectionString = default!;
+    private SqlConnection _connection = default!;
+    private Respawner _respawner = default!;
 
     public SqlServerTestDatabase()
     {
@@ -20,9 +20,8 @@ public class SqlServerTestDatabase : ITestDatabase
             .AddEnvironmentVariables()
             .Build();
 
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-        Guard.Against.Null(connectionString);
+        var connectionString = configuration.GetConnectionString("DefaultConnection") ??
+            throw new Exception("Test database connection string cannot be null or was not provided");
 
         _connectionString = connectionString;
     }
@@ -41,7 +40,7 @@ public class SqlServerTestDatabase : ITestDatabase
 
         _respawner = await Respawner.CreateAsync(_connectionString, new RespawnerOptions
         {
-            TablesToIgnore = new Respawn.Graph.Table[] { "__EFMigrationsHistory" }
+            TablesToIgnore = ["__EFMigrationsHistory"]
         });
     }
 

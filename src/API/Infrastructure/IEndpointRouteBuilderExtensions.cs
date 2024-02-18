@@ -1,11 +1,10 @@
-﻿namespace CleanArchitecture.Web.Infrastructure;
+﻿namespace CleanArchitecture.API.Infrastructure;
 
 public static class IEndpointRouteBuilderExtensions
 {
     public static IEndpointRouteBuilder MapGet(this IEndpointRouteBuilder builder, Delegate handler, string pattern = "")
     {
-        Guard.Against.AnonymousMethod(handler);
-
+        MethodInfoExtensions.AnonymousMethod(handler);
         builder.MapGet(pattern, handler)
             .WithName(handler.Method.Name);
 
@@ -14,8 +13,7 @@ public static class IEndpointRouteBuilderExtensions
 
     public static IEndpointRouteBuilder MapPost(this IEndpointRouteBuilder builder, Delegate handler, string pattern = "")
     {
-        Guard.Against.AnonymousMethod(handler);
-
+        MethodInfoExtensions.AnonymousMethod(handler);
         builder.MapPost(pattern, handler)
             .WithName(handler.Method.Name);
 
@@ -24,8 +22,7 @@ public static class IEndpointRouteBuilderExtensions
 
     public static IEndpointRouteBuilder MapPut(this IEndpointRouteBuilder builder, Delegate handler, string pattern)
     {
-        Guard.Against.AnonymousMethod(handler);
-
+        MethodInfoExtensions.AnonymousMethod(handler);
         builder.MapPut(pattern, handler)
             .WithName(handler.Method.Name);
 
@@ -34,8 +31,7 @@ public static class IEndpointRouteBuilderExtensions
 
     public static IEndpointRouteBuilder MapDelete(this IEndpointRouteBuilder builder, Delegate handler, string pattern)
     {
-        Guard.Against.AnonymousMethod(handler);
-
+        MethodInfoExtensions.AnonymousMethod(handler);
         builder.MapDelete(pattern, handler)
             .WithName(handler.Method.Name);
 

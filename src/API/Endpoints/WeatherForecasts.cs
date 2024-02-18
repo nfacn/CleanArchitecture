@@ -1,6 +1,8 @@
-﻿using CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts;
+﻿
+using CleanArchitecture.API.Infrastructure;
+using CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts;
 
-namespace CleanArchitecture.Web.Endpoints;
+namespace CleanArchitecture.API.Endpoints;
 
 public class WeatherForecasts : EndpointGroupBase
 {

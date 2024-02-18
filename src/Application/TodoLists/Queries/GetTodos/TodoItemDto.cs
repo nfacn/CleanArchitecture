@@ -1,4 +1,6 @@
-﻿using CleanArchitecture.Domain.Entities;
+﻿using CleanArchitecture.Application.TodoItems.Queries.GetTodoItemsWithPagination;
+using CleanArchitecture.Domain.Entities;
+using Riok.Mapperly.Abstractions;
 
 namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos;
 
@@ -16,12 +18,12 @@ public class TodoItemDto
 
     public string? Note { get; init; }
 
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<TodoItem, TodoItemDto>().ForMember(d => d.Priority, 
-                opt => opt.MapFrom(s => (int)s.Priority));
-        }
-    }
+}
+
+[Mapper]
+public static partial class TodoItemDtoMapper
+{
+    public static partial TodoItemDto ToDto(this TodoItem todoItem);
+
+    public static partial IQueryable<TodoItemDto> ProjectToDto(this IQueryable<TodoItem> q);
 }

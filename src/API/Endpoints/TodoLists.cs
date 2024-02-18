@@ -1,9 +1,10 @@
-﻿using CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
+﻿using CleanArchitecture.API.Infrastructure;
+using CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
 using CleanArchitecture.Application.TodoLists.Commands.DeleteTodoList;
 using CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList;
 using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
 
-namespace CleanArchitecture.Web.Endpoints;
+namespace CleanArchitecture.API.Endpoints;
 
 public class TodoLists : EndpointGroupBase
 {

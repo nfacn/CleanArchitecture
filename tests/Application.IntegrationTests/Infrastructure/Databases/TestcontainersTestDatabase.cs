@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Testcontainers.MsSql;
 
-namespace CleanArchitecture.Application.FunctionalTests;
+namespace CleanArchitecture.Application.IntegrationTests.Infrastructure.Databases;
 
 public class TestcontainersTestDatabase : ITestDatabase
 {
     private readonly MsSqlContainer _container;
-    private DbConnection _connection = null!;
-    private string _connectionString = null!;
-    private Respawner _respawner = null!;
+    private DbConnection _connection = default!;
+    private string _connectionString = default!;
+    private Respawner _respawner = default!;
 
     public TestcontainersTestDatabase()
     {
@@ -39,7 +39,7 @@ public class TestcontainersTestDatabase : ITestDatabase
 
         _respawner = await Respawner.CreateAsync(_connectionString, new RespawnerOptions
         {
-            TablesToIgnore = new Respawn.Graph.Table[] { "__EFMigrationsHistory" }
+            TablesToIgnore = ["__EFMigrationsHistory"]
         });
     }
 

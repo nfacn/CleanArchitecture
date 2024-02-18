@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
+﻿using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Domain.Events;
 
 namespace CleanArchitecture.Application.TodoItems.Commands.DeleteTodoItem;
@@ -17,9 +18,10 @@ public class DeleteTodoItemCommandHandler : IRequestHandler<DeleteTodoItemComman
     public async Task Handle(DeleteTodoItemCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.TodoItems
-            .FindAsync(new object[] { request.Id }, cancellationToken);
+            .FindAsync([request.Id], cancellationToken);
 
-        Guard.Against.NotFound(request.Id, entity);
+        // Example
+        if(entity == null) throw new NotFoundException("request.id not found");
 
         _context.TodoItems.Remove(entity);
 

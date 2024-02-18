@@ -1,29 +1,36 @@
 ﻿using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.IntegrationTests.Infrastructure.Fixtures;
 using CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem;
 using CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
 using CleanArchitecture.Domain.Entities;
 
-namespace CleanArchitecture.Application.FunctionalTests.TodoItems.Commands;
+namespace CleanArchitecture.Application.IntegrationTests.TodoItems.Commands;
 
-using static Testing;
-
-public class CreateTodoItemTests : BaseTestFixture
+[Collection(nameof(ClientCollectionFixture))]
+public class CreateTodoItemTests : IAsyncLifetime
 {
-    [Test]
+    private readonly ClientFixture _clientFixture;
+
+    public CreateTodoItemTests(ClientFixture clientFixture)
+    {
+        _clientFixture = clientFixture;
+    }
+
+    [Fact]
     public async Task ShouldRequireMinimumFields()
     {
         var command = new CreateTodoItemCommand();
 
         await FluentActions.Invoking(() =>
-            SendAsync(command)).Should().ThrowAsync<ValidationException>();
+            _clientFixture.SendAsync(command)).Should().ThrowAsync<ValidationException>();
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldCreateTodoItem()
     {
-        var userId = await RunAsDefaultUserAsync();
+        var userId = await _clientFixture.RunAsDefaultUserAsync();
 
-        var listId = await SendAsync(new CreateTodoListCommand
+        var listId = await _clientFixture.SendAsync(new CreateTodoListCommand
         {
             Title = "New List"
         });
@@ -34,9 +41,9 @@ public class CreateTodoItemTests : BaseTestFixture
             Title = "Tasks"
         };
 
-        var itemId = await SendAsync(command);
+        var itemId = await _clientFixture.SendAsync(command);
 
-        var item = await FindAsync<TodoItem>(itemId);
+        var item = await _clientFixture.FindAsync<TodoItem>(itemId);
 
         item.Should().NotBeNull();
         item!.ListId.Should().Be(command.ListId);
@@ -46,4 +53,8 @@ public class CreateTodoItemTests : BaseTestFixture
         item.LastModifiedBy.Should().Be(userId);
         item.LastModified.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));
     }
+
+    public Task InitializeAsync() => Task.CompletedTask;
+
+    public async Task DisposeAsync() => await _clientFixture.ResetDatabaseAsync();
 }

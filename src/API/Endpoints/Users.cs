@@ -1,7 +1,7 @@
 ﻿#if (UseApiOnly)
 using CleanArchitecture.Infrastructure.Identity;
 
-namespace CleanArchitecture.Web.Endpoints;
+namespace CleanArchitecture.API.Endpoints;
 
 public class Users : EndpointGroupBase
 {

@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
+﻿using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.Common.Interfaces;
 
 namespace CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItem;
 
@@ -23,10 +24,12 @@ public class UpdateTodoItemCommandHandler : IRequestHandler<UpdateTodoItemComman
     public async Task Handle(UpdateTodoItemCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.TodoItems
-            .FindAsync(new object[] { request.Id }, cancellationToken);
-
-        Guard.Against.NotFound(request.Id, entity);
-
+            .FindAsync([request.Id], cancellationToken);
+        
+        // Check entity and return not found for example
+        if (entity is null)
+            return;
+        
         entity.Title = request.Title;
         entity.Done = request.Done;
 

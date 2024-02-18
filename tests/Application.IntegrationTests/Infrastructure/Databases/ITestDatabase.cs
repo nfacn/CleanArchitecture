@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
 
-namespace CleanArchitecture.Application.FunctionalTests;
+namespace CleanArchitecture.Application.IntegrationTests.Infrastructure.Databases;
 
 public interface ITestDatabase
 {

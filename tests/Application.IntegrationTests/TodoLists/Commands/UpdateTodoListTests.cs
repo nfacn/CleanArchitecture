@@ -1,30 +1,36 @@
 ﻿using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.IntegrationTests.Infrastructure.Fixtures;
 using CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
 using CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList;
 using CleanArchitecture.Domain.Entities;
 
-namespace CleanArchitecture.Application.FunctionalTests.TodoLists.Commands;
+namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands;
 
-using static Testing;
-
-public class UpdateTodoListTests : BaseTestFixture
+[Collection(nameof(ClientCollectionFixture))]
+public class UpdateTodoListTests : IAsyncLifetime
 {
-    [Test]
+    private readonly ClientFixture _clientFixture;
+
+    public UpdateTodoListTests(ClientFixture clientFixture)
+    {
+        _clientFixture = clientFixture;
+    }
+    [Fact]
     public async Task ShouldRequireValidTodoListId()
     {
         var command = new UpdateTodoListCommand { Id = 99, Title = "New Title" };
-        await FluentActions.Invoking(() => SendAsync(command)).Should().ThrowAsync<NotFoundException>();
+        await FluentActions.Invoking(() => _clientFixture.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldRequireUniqueTitle()
     {
-        var listId = await SendAsync(new CreateTodoListCommand
+        var listId = await _clientFixture.SendAsync(new CreateTodoListCommand
         {
             Title = "New List"
         });
 
-        await SendAsync(new CreateTodoListCommand
+        await _clientFixture.SendAsync(new CreateTodoListCommand
         {
             Title = "Other List"
         });
@@ -36,17 +42,17 @@ public class UpdateTodoListTests : BaseTestFixture
         };
 
         (await FluentActions.Invoking(() =>
-            SendAsync(command))
+            _clientFixture.SendAsync(command))
                 .Should().ThrowAsync<ValidationException>().Where(ex => ex.Errors.ContainsKey("Title")))
                 .And.Errors["Title"].Should().Contain("'Title' must be unique.");
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldUpdateTodoList()
     {
-        var userId = await RunAsDefaultUserAsync();
+        var userId = await _clientFixture.RunAsDefaultUserAsync();
 
-        var listId = await SendAsync(new CreateTodoListCommand
+        var listId = await _clientFixture.SendAsync(new CreateTodoListCommand
         {
             Title = "New List"
         });
@@ -57,9 +63,9 @@ public class UpdateTodoListTests : BaseTestFixture
             Title = "Updated List Title"
         };
 
-        await SendAsync(command);
+        await _clientFixture.SendAsync(command);
 
-        var list = await FindAsync<TodoList>(listId);
+        var list = await _clientFixture.FindAsync<TodoList>(listId);
 
         list.Should().NotBeNull();
         list!.Title.Should().Be(command.Title);
@@ -67,4 +73,6 @@ public class UpdateTodoListTests : BaseTestFixture
         list.LastModifiedBy.Should().Be(userId);
         list.LastModified.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));
     }
+    public Task InitializeAsync() => Task.CompletedTask;
+    public async Task DisposeAsync() => await _clientFixture.ResetDatabaseAsync();
 }
