@@ -10,7 +10,7 @@
   "description": "Simplified Clean Architecture Solution Template for creating ASP.NET Core WebApi.",
   "identity": "Clean.Architecture.Solution.CSharp",
   "groupIdentity": "Clean.Architecture.Solution",
-  "shortName": "ca-sln",
+  "shortName": "ca-sln-simple",
   "tags": {
     "language": "C#",
     "type": "project"
@@ -64,7 +64,8 @@
         "**/*.filelist",
         "**/*.user",
         "**/*.lock.json",
-        "*.nuspec"
+        "*.nuspec",
+        ".github/**/*"
       ],
       "rename": {
         "README-template.md": "README.md"
